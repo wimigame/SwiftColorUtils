@@ -304,5 +304,77 @@ public struct SCUColor {
     public var hsv : HSV
     public var cmyk : CMYK
     public var alpha : Double
+    
+    /**
+     Creates new instance from provided compacted color value
+     - Parameters:
+        - argb the compacted color value
+     */
+    public init(argb: UInt32) {
+        let (rgb, a) = argb.toRGBA()
+        self.init(rgb : rgb, alpha : a)
+    }
+    
+    /**
+     Creates new instance from provided hex encoded String
+     - Parameters:
+        - argb the compacted color value
+     */
+    public init?(argb: String) {
+        if argb.characters.count < 8 {
+            if let rgb = argb.toRGB() {
+                self = SCUColor(rgb : rgb, alpha : 1.0)
+            } else {
+                // return nil, discarding self is implied
+                return nil
+            }
+        } else {
+            if let (rgb, alpha) = argb.toRGBA() {
+                self = SCUColor(rgb: rgb, alpha: alpha)
+            } else {
+                // return nil, discarding self is implied
+                return nil
+            }
+        }
+    }
+
+    /**
+     Creates new instance
+     - Parameters:
+        - rgb the `RGB` components holder
+        - alpha the alpha component
+     */
+    public init(rgb : RGB, alpha : Double) {
+        self.rgb = rgb
+        self.alpha = alpha
+        self.hsv = rgb.toHSV()
+        self.cmyk = rgb.toCMYK()
+    }
+    
+    /**
+     Creates new instance
+     - Parameters:
+        - cmyk the `CMYK` components holder
+        - alpha the alpha component
+     */
+    public init(cmyk : CMYK, alpha : Double) {
+        self.cmyk = cmyk
+        self.alpha = alpha
+        self.rgb = cmyk.toRGB()
+        self.hsv = self.rgb.toHSV()
+    }
+    
+    /**
+     Creates new instance
+     - Parameters:
+        - hsv the `HSV` components holder
+        - alpha the alpha component
+     */
+    public init(hsv : HSV, alpha : Double) {
+        self.hsv = hsv
+        self.alpha = alpha
+        self.rgb = hsv.toRGB()
+        self.cmyk = self.rgb.toCMYK()
+    }
 
 }
