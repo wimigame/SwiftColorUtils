@@ -233,7 +233,7 @@ extension HSV {
 /**
  The `UInt32` extension providing utilities to extract/compact `RGB` value
  */
-public extension UInt32 {
+extension UInt32 {
     /**
      Extracts `RGB` and alpha from compacted ARGB 32 unsigned integer
      */
@@ -248,19 +248,16 @@ public extension UInt32 {
 /**
  The String extension providing utilities to extract RGB or ARGB components from hex string
  */
-public extension String {
+extension String {
     /**
-     Extracts `RGB` from hex string
+     Extracts `RGB` from hex string in format RRGGBB
+     - Returns: `RGB` holder with extracted values or `nil`
      */
     public func toRGB() -> RGB? {
         if self.characters.count < 6 {
             return nil
         }
-        var str = self
-        if str.characters.count > 6 {
-            let index = self.startIndex.advancedBy(6)
-            str = self.substringToIndex(index)
-        }
+        let str = self.clipFromEnd(6)
         if let value = UInt32(str, radix: 16) {
             let (rgb, _) = value.toRGBA()
             return rgb
@@ -269,11 +266,32 @@ public extension String {
         }
     }
     /**
-     Extracts `RGB` and alpha from hex string
+     Extracts `RGB` and alpha from hex string in format AARRGGBB
+     - Returns: tuple with `RGB` and alpha values or `nil`
      */
-//    public func toRGBA() -> (RGB, alpha: Double) {
-//        
-//    }
+    public func toRGBA() -> (RGB, alpha: Double)? {
+        if self.characters.count < 8 {
+            return nil
+        }
+        let str = self.clipFromEnd(8)
+        if let value = UInt32(str, radix: 16) {
+            return value.toRGBA()
+        } else {
+            return nil
+        }
+    }
+    /**
+     Clips this strip from end to limit characters count within specified range
+     - Parameter limit the maximal number of characters to be in string after clipping
+     - Returns: clipped by specified length string
+     */
+    private func clipFromEnd(limit: Int) -> String {
+        if self.characters.count > limit {
+            let index = self.endIndex.advancedBy(-limit)
+            return self.substringFromIndex(index)
+        }
+        return self
+    }
 }
 
 // MARK: SCUColor implementation start

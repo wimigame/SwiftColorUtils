@@ -61,8 +61,43 @@ class SCUColorTests: XCTestCase {
         let gExpected = Double(g) * INV8BIT
         XCTAssertEqual(rgb.G, gExpected, "Green expected \(gExpected), but found \(rgb.G)")
         let bExpected = Double(b) * INV8BIT
-        XCTAssertEqual(rgb.B, gExpected, "Blue expected \(bExpected), but found \(rgb.B)")
+        XCTAssertEqual(rgb.B, bExpected, "Blue expected \(bExpected), but found \(rgb.B)")
         
+    }
+    
+    func testHexStringConversions() {
+        // test positive normal
+        let expectedRGB = RGB(r: 80 * INV8BIT, g: 80 * INV8BIT, b: 80 * INV8BIT)
+        if let rgb = "505050".toRGB() {
+            XCTAssertEqual(rgb, expectedRGB, "Converted RGB failed to match expected one")
+        } else {
+            XCTFail("Failed to invoke String.toRGB()")
+        }
+        
+        let expectedAlpha = 80 * INV8BIT
+        if let (rgb, a) = "50505050".toRGBA() {
+            XCTAssertEqual(rgb, expectedRGB, "Converted RGB failed to match expected one")
+            XCTAssertEqual(a, expectedAlpha, "Converted Alpha failed to match expected one")
+        } else {
+            XCTFail("Failed to invoke String.toRGBA()")
+        }
+        
+        // test positive oversize
+        if let rgb = "60505050".toRGB() {
+            XCTAssertEqual(rgb, expectedRGB, "Converted RGB failed to match expected one")
+        } else {
+            XCTFail("Failed to invoke String.toRGB()")
+        }
+        if let (rgb, a) = "6050505050".toRGBA() {
+            XCTAssertEqual(rgb, expectedRGB, "Converted RGB failed to match expected one")
+            XCTAssertEqual(a, expectedAlpha, "Converted Alpha failed to match expected one")
+        } else {
+            XCTFail("Failed to invoke String.toRGBA()")
+        }
+        
+        // test negative
+        XCTAssertNil("5050".toRGB())
+        XCTAssertNil("505050".toRGBA())
     }
 
 }

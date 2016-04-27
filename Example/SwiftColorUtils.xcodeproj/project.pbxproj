@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7881E4591CC7BB1300C204B5 /* SCUHue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7881E4581CC7BB1300C204B5 /* SCUHue.swift */; };
-		7881E45A1CC7BB1300C204B5 /* SCUHue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7881E4581CC7BB1300C204B5 /* SCUHue.swift */; };
 		78E83BE71CC68ED3001319C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E83BE61CC68ED3001319C9 /* AppDelegate.swift */; };
 		78E83BE91CC68ED3001319C9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E83BE81CC68ED3001319C9 /* ViewController.swift */; };
 		78E83BEC1CC68ED3001319C9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78E83BEA1CC68ED3001319C9 /* Main.storyboard */; };
@@ -16,7 +15,6 @@
 		78E83BF11CC68ED3001319C9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78E83BEF1CC68ED3001319C9 /* LaunchScreen.storyboard */; };
 		78E83C071CC68ED3001319C9 /* SwiftColorUtilsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E83C061CC68ED3001319C9 /* SwiftColorUtilsUITests.swift */; };
 		78EC50D91CCF7C62002F5529 /* SCUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC50D81CCF7C62002F5529 /* SCUColor.swift */; };
-		78EC50DA1CCF7C62002F5529 /* SCUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC50D81CCF7C62002F5529 /* SCUColor.swift */; };
 		78EC50DC1CCFB65A002F5529 /* SCUColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EC50DB1CCFB65A002F5529 /* SCUColorTests.swift */; };
 		78FC85991CCE29080057E2E6 /* SCUHueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FC85981CCE29080057E2E6 /* SCUHueTests.swift */; };
 /* End PBXBuildFile section */
@@ -287,8 +285,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7881E45A1CC7BB1300C204B5 /* SCUHue.swift in Sources */,
-				78EC50DA1CCF7C62002F5529 /* SCUColor.swift in Sources */,
 				78FC85991CCE29080057E2E6 /* SCUHueTests.swift in Sources */,
 				78EC50DC1CCFB65A002F5529 /* SCUColorTests.swift in Sources */,
 			);
