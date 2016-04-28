@@ -49,7 +49,7 @@ public struct RGB {
     public let R : Double
     public let G : Double
     public let B : Double
-    
+
     /**
      Creates new instance and clips provided values to be in color's component range (0 .. 1)
      */
@@ -120,7 +120,7 @@ extension RGB {
      The utility function to convert RGB value to CMYK value
      - Returns: `CMYK` values holder
      */
-    public func toCMYK() -> CMYK {
+    func toCMYK() -> CMYK {
         var C = 1.0 - self.R
         var M = 1.0 - self.G
         var Y = 1.0 - self.B
@@ -136,7 +136,7 @@ extension RGB {
      The utility function to convert RGB value to HSV value
      - Returns: `HSV` values holder
      */
-    public func toHSV() -> HSV {
+    func toHSV() -> HSV {
         let v = fmax(fmax(self.R, self.G), self.B)
         let d = v - fmin(fmin(self.R, self.G), self.B)
         
@@ -172,7 +172,7 @@ extension CMYK {
      The utility function to convert CMYK value to RGB value
      - Returns: `RGB` values holder
      */
-    public func toRGB() -> RGB {
+    func toRGB() -> RGB {
         let r = 1.0 - fmin(1.0, self.C + self.K)
         let g = 1.0 - fmin(1.0, self.M + self.K)
         let b = 1.0 - fmin(1.0, self.Y + self.K)
@@ -187,7 +187,7 @@ extension HSV {
      The utility function to convert HSV value to RGB value
      - Returns: `RGB` values holder
      */
-    public func toRGB() -> RGB {
+    func toRGB() -> RGB {
         var r : Double, g : Double, b: Double
         if self.S == 0.0 {
             r = self.V
@@ -237,7 +237,7 @@ extension UInt32 {
     /**
      Extracts `RGB` and alpha from compacted ARGB 32 unsigned integer
      */
-    public func toRGBA() -> (RGB, alpha: Double) {
+    func toRGBA() -> (RGB, alpha: Double) {
         let r = Double((self >> 16) & 0xff) * INV8BIT
         let g = Double((self >> 8) & 0xff) * INV8BIT
         let b = Double(self & 0xff) * INV8BIT
@@ -253,7 +253,7 @@ extension String {
      Extracts `RGB` from hex string in format RRGGBB
      - Returns: `RGB` holder with extracted values or `nil`
      */
-    public func toRGB() -> RGB? {
+    func toRGB() -> RGB? {
         if self.characters.count < 6 {
             return nil
         }
@@ -269,7 +269,7 @@ extension String {
      Extracts `RGB` and alpha from hex string in format AARRGGBB
      - Returns: tuple with `RGB` and alpha values or `nil`
      */
-    public func toRGBA() -> (RGB, alpha: Double)? {
+    func toRGBA() -> (RGB, alpha: Double)? {
         if self.characters.count < 8 {
             return nil
         }
@@ -295,6 +295,59 @@ extension String {
 }
 
 // MARK: SCUColor implementation start
+/**
+ The `RGB` extension providing color check facilities
+ */
+extension RGB {
+    /**
+     Maximum rgb component value for a color to be classified as black.
+     */
+    static let blackPoint = 0.08
+    
+    /**
+     Minimum rgb component value for a color to be classified as white.
+     */
+    static let whitePoint = 1.0
+    /**
+     Method to check whether this RGB holder holds color which can be considered black
+     - Returns: true if this holder holds color close enough to black to be considered the one
+     */
+    func isBlack() -> Bool {
+        return self.R <= RGB.blackPoint && self.R == self.G && self.R == self.B
+    }
+    /**
+     Method to check whether this RGB holder holds color which can be considered white
+     - Returns: true if this holder holds color close enough to white to be considered the one
+     */
+    func isWhite() -> Bool {
+        return self.R >= RGB.whitePoint && self.R == self.G && self.R == self.B
+    }
+}
+/**
+ The `HSV` extension providing color check facilities
+ */
+extension HSV {
+    /**
+     Maximum saturations value for a color to be classified as grey
+     */
+    static let greyThreshold = 0.01
+    
+    /**
+     Method to check whether color described by this holder may be considered as grey
+     - Returns: true if color described by this holder may be considered as grey
+     */
+    func isGrey() -> Bool {
+        return self.S < HSV.greyThreshold
+    }
+    
+    /**
+     Method to check whether color described by this holder may be considered as primary one 
+     - Returns: true if color described by this holder may be considered as primary one
+     */
+    func isPrimary() -> Bool {
+        return NamedHues.instance.isPrimary(self.H)
+    }
+}
 
 /**
  The color implementation based on floating point values for color's components
@@ -304,11 +357,15 @@ public struct SCUColor {
     public var hsv : HSV
     public var cmyk : CMYK
     public var alpha : Double
-    
+}
+/**
+ Extension with common color constructors
+ */
+extension SCUColor {
     /**
      Creates new instance from provided compacted color value
      - Parameters:
-        - argb the compacted color value
+     - argb the compacted color value
      */
     public init(argb: UInt32) {
         let (rgb, a) = argb.toRGBA()
@@ -318,7 +375,7 @@ public struct SCUColor {
     /**
      Creates new instance from provided hex encoded String
      - Parameters:
-        - argb the compacted color value
+     - argb the compacted color value
      */
     public init?(argb: String) {
         if argb.characters.count < 8 {
@@ -337,12 +394,12 @@ public struct SCUColor {
             }
         }
     }
-
+    
     /**
      Creates new instance
      - Parameters:
-        - rgb the `RGB` components holder
-        - alpha the alpha component
+     - rgb the `RGB` components holder
+     - alpha the alpha component
      */
     public init(rgb : RGB, alpha : Double) {
         self.rgb = rgb
@@ -354,8 +411,8 @@ public struct SCUColor {
     /**
      Creates new instance
      - Parameters:
-        - cmyk the `CMYK` components holder
-        - alpha the alpha component
+     - cmyk the `CMYK` components holder
+     - alpha the alpha component
      */
     public init(cmyk : CMYK, alpha : Double) {
         self.cmyk = cmyk
@@ -367,14 +424,69 @@ public struct SCUColor {
     /**
      Creates new instance
      - Parameters:
-        - hsv the `HSV` components holder
-        - alpha the alpha component
+     - hsv the `HSV` components holder
+     - alpha the alpha component
      */
     public init(hsv : HSV, alpha : Double) {
         self.hsv = hsv
-        self.alpha = alpha
         self.rgb = hsv.toRGB()
         self.cmyk = self.rgb.toCMYK()
+        self.alpha = alpha
     }
+}
 
+/**
+ The extension providing method to quick check major color properties
+ */
+extension SCUColor {
+    /**
+     Method to check whether this color can be considered black
+     - Returns: true if this color close enough to black to be considered the one
+     */
+    public func isBlack() -> Bool {
+        return self.rgb.isBlack()
+    }
+    /**
+     Method to check whether this color can be considered white
+     - Returns: true if this color close enough to white to be considered the one
+     */
+    public func isWhite() -> Bool {
+        return self.rgb.isWhite()
+    }
+    /**
+     Method to check whether this color may be considered as grey
+     - Returns: true if this color may be considered as grey
+     */
+    public func isGrey() -> Bool {
+        return self.hsv.isGrey()
+    }
+    /**
+     Method to check whether this color may be considered as primary one
+     - Returns: true if this color may be considered as primary one
+     */
+    public func isPrimary() -> Bool {
+        return self.hsv.isPrimary()
+    }
+    /**
+     Method to get color luminance assuming sRGB Primaries as per http://en.wikipedia.org/wiki/Luminance_(relative).
+     - Returns: color luminance
+     */
+    public func luminance() -> Double{
+        return self.rgb.R * 0.2126 + self.rgb.G * 0.7152 + self.rgb.B * 0.0722
+    }
+}
+/**
+ Extension with common color manipulation methods 
+ */
+extension SCUColor {
+    /**
+     Method to get darken by specified amount version of this color
+     - Parameter step the step (0.1 -> 10%)
+     - Returns: darken version of this color
+     */
+    public func darken(step : Double) -> SCUColor {
+        let brightness = self.hsv.V - step.clipColor()
+        let newHSV = HSV(h: self.hsv.H, s: self.hsv.S, v: brightness)
+        return SCUColor(hsv: newHSV, alpha: self.alpha)
+    }
 }

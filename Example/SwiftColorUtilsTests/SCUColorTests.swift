@@ -99,5 +99,27 @@ class SCUColorTests: XCTestCase {
         XCTAssertNil("5050".toRGB())
         XCTAssertNil("505050".toRGBA())
     }
+    
+    func testIsBlack() {
+        // test isBlack()
+        XCTAssertTrue(SCUColor(rgb: RGB(r: 10 * INV8BIT, g: 10 * INV8BIT, b: 10 * INV8BIT), alpha: 1.0).isBlack())
+        XCTAssertFalse(SCUColor(rgb: RGB(r: 30 * INV8BIT, g: 30 * INV8BIT, b: 30 * INV8BIT), alpha: 1.0).isBlack())
+    }
 
+    func testIsWhite() {
+        XCTAssertTrue(SCUColor(rgb: RGB(r: 255 * INV8BIT, g: 255 * INV8BIT, b: 255 * INV8BIT), alpha: 1.0).isWhite())
+        XCTAssertFalse(SCUColor(rgb: RGB(r: 250 * INV8BIT, g: 250 * INV8BIT, b: 250 * INV8BIT), alpha: 1.0).isWhite())
+    }
+    
+    func testIsGray() {
+        XCTAssertTrue(SCUColor(rgb: RGB(r: 30 * INV8BIT, g: 30 * INV8BIT, b: 30 * INV8BIT), alpha: 1.0).isGrey())
+        XCTAssertFalse(SCUColor(rgb: RGB(r: 30 * INV8BIT, g: 230 * INV8BIT, b: 130 * INV8BIT), alpha: 1.0).isGrey())
+    }
+    
+    func testIsPrimary() {
+        let orange = NamedHues.Standard.Orange.hue
+        XCTAssertTrue(SCUColor(hsv: HSV(h: orange.hue, s: 1.0, v: 1.0), alpha: 1.0).isPrimary())
+        let teal = NamedHues.Standard.Teal.hue
+        XCTAssertFalse(SCUColor(hsv: HSV(h: teal.hue, s: 1.0, v: 1.0), alpha: 1.0).isPrimary())
+    }
 }
